@@ -56,7 +56,7 @@ namespace Blog.Controllers
             context.Categories.Update(category);
             await context.SaveChangesAsync();
 
-            return Created($"v1/categories/{model.Id}", model);
+            return Ok(model);
         }
 
         [HttpDelete("v1/categories")]

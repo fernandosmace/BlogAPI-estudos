@@ -11,7 +11,7 @@ namespace Blog.Controllers
         [HttpGet("v1/categories")]
         public async Task<IActionResult> GetAsync([FromServices] BlogDataContext context)
         {
-            var categories = await context.Categories.ToListAsync();
+            var categories = await context.Categories.AsNoTracking().ToListAsync();
             return Ok(categories);
         }
 
@@ -20,7 +20,7 @@ namespace Blog.Controllers
             [FromRoute] int id,
             [FromServices] BlogDataContext context)
         {
-            var category = await context.Categories.FirstOrDefaultAsync(x => x.Id == id);
+            var category = await context.Categories.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
 
             if (category == null)
                 return NotFound();
@@ -34,6 +34,26 @@ namespace Blog.Controllers
             [FromServices] BlogDataContext context)
         {
             await context.Categories.AddAsync(model);
+            await context.SaveChangesAsync();
+
+            return Created($"v1/categories/{model.Id}", model);
+        }
+
+        [HttpGet("v1/categories/{id:int}")]
+        public async Task<IActionResult> PutAsync(
+            [FromRoute] int id,
+            [FromBody] Category model,
+            [FromServices] BlogDataContext context)
+        {
+            var category = await context.Categories.FirstAsync(x => x.Id == id);
+
+            if (category == null)
+                return NotFound();
+
+
+            category.Name = model.Name;
+            category.Slug = model.Slug;
+            context.Categories.Update(category);
             await context.SaveChangesAsync();
 
             return Created($"v1/categories/{model.Id}", model);

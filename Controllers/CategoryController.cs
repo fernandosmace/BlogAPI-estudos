@@ -33,10 +33,21 @@ namespace Blog.Controllers
             [FromBody] Category model,
             [FromServices] BlogDataContext context)
         {
-            await context.Categories.AddAsync(model);
-            await context.SaveChangesAsync();
+            try
+            {
+                await context.Categories.AddAsync(model);
+                await context.SaveChangesAsync();
 
-            return Created($"v1/categories/{model.Id}", model);
+                return Created($"v1/categories/{model.Id}", model);
+            }
+            catch (DbUpdateException ex)
+            {
+                return StatusCode(500, "05XE9 - Não foi possível incluir a categoria.");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "05XE10 - Falha interna no servidor.");
+            }
         }
 
         [HttpPut("v1/categories/{id:int}")]
@@ -59,7 +70,7 @@ namespace Blog.Controllers
             return Ok(model);
         }
 
-        [HttpDelete("v1/categories")]
+        [HttpDelete("v1/categories/{id:int}")]
         public async Task<IActionResult> DeleteAsync(
             [FromRoute] int id,
             [FromServices] BlogDataContext context)

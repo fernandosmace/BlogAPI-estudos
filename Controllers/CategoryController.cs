@@ -75,12 +75,12 @@ namespace Blog.Controllers
         [HttpPut("v1/categories/{id:int}")]
         public async Task<IActionResult> PutAsync(
             [FromRoute] int id,
-            [FromBody] Category model,
+            [FromBody] EditorCategoryViewModel model,
             [FromServices] BlogDataContext context)
         {
             try
             {
-                var category = await context.Categories.FirstAsync(x => x.Id == id);
+                var category = await context.Categories.FirstOrDefaultAsync(x => x.Id == id);
 
                 if (category == null)
                     return NotFound();
@@ -91,7 +91,7 @@ namespace Blog.Controllers
                 context.Categories.Update(category);
                 await context.SaveChangesAsync();
 
-                return Ok(model);
+                return Ok(category);
             }
             catch (DbUpdateException ex)
             {
@@ -110,7 +110,7 @@ namespace Blog.Controllers
         {
             try
             {
-                var category = await context.Categories.FirstAsync(x => x.Id == id);
+                var category = await context.Categories.FirstOrDefaultAsync(x => x.Id == id);
 
                 if (category == null)
                     return NotFound();

@@ -58,5 +58,21 @@ namespace Blog.Controllers
 
             return Created($"v1/categories/{model.Id}", model);
         }
+
+        [HttpDelete("v1/categories")]
+        public async Task<IActionResult> DeleteAsync(
+            [FromRoute] int id,
+            [FromServices] BlogDataContext context)
+        {
+            var category = await context.Categories.FirstAsync(x => x.Id == id);
+
+            if (category == null)
+                return NotFound();
+
+            context.Categories.Remove(category);
+            await context.SaveChangesAsync();
+
+            return Ok(category);
+        }
     }
 }

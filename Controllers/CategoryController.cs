@@ -1,4 +1,5 @@
 using Blog.Data;
+using Blog.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -25,6 +26,17 @@ namespace Blog.Controllers
                 return NotFound();
 
             return Ok(category);
+        }
+
+        [HttpGet("v1/categories")]
+        public async Task<IActionResult> PostAsync(
+            [FromBody] Category model,
+            [FromServices] BlogDataContext context)
+        {
+            await context.Categories.AddAsync(model);
+            await context.SaveChangesAsync();
+
+            return Created($"v1/categories/{model.Id}", model);
         }
     }
 }

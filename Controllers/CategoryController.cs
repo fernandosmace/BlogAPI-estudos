@@ -28,7 +28,7 @@ namespace Blog.Controllers
             return Ok(category);
         }
 
-        [HttpGet("v1/categories")]
+        [HttpPost("v1/categories")]
         public async Task<IActionResult> PostAsync(
             [FromBody] Category model,
             [FromServices] BlogDataContext context)
@@ -39,7 +39,7 @@ namespace Blog.Controllers
             return Created($"v1/categories/{model.Id}", model);
         }
 
-        [HttpGet("v1/categories/{id:int}")]
+        [HttpPut("v1/categories/{id:int}")]
         public async Task<IActionResult> PutAsync(
             [FromRoute] int id,
             [FromBody] Category model,

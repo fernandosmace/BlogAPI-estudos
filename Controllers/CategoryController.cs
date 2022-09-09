@@ -1,6 +1,7 @@
 using Blog.Data;
 using Blog.Models;
 using Blog.ViewModels;
+using BlogAPI_estudos.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,11 +16,11 @@ namespace Blog.Controllers
             try
             {
                 var categories = await context.Categories.AsNoTracking().ToListAsync();
-                return Ok(categories);
+                return Ok(new ResultViewModel<List<Category>>(categories));
             }
             catch (Exception ex)
             {
-                return StatusCode(500, "05XE2 - Falha interna no servidor.");
+                return StatusCode(500, new ResultViewModel<List<Category>>("05XE2 - Falha interna no servidor."));
             }
         }
 
@@ -33,13 +34,13 @@ namespace Blog.Controllers
                 var category = await context.Categories.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
 
                 if (category == null)
-                    return NotFound();
+                    return NotFound(new ResultViewModel<Category>("Conteúdo não encontrado"));
 
-                return Ok(category);
+                return Ok(new ResultViewModel<Category>(category));
             }
             catch (Exception ex)
             {
-                return StatusCode(500, "05XE4 - Falha interna no servidor.");
+                return StatusCode(500, new ResultViewModel<Category>("05XE4 - Falha interna no servidor."));
             }
         }
 
@@ -48,6 +49,9 @@ namespace Blog.Controllers
             [FromBody] EditorCategoryViewModel model,
             [FromServices] BlogDataContext context)
         {
+            if (!ModelState.IsValid)
+                return BadRequest();
+
             try
             {
                 var category = new Category

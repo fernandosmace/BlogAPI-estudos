@@ -1,4 +1,4 @@
-namespace BlogAPI_estudos;
+namespace Blog;
 
 
 public static class Configuration

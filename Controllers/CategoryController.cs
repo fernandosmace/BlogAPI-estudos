@@ -2,7 +2,7 @@ using Blog.Data;
 using Blog.Extensions;
 using Blog.Models;
 using Blog.ViewModels;
-using BlogAPI_estudos.ViewModels;
+using Blog.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 

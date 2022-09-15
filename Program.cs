@@ -1,4 +1,5 @@
 using Blog.Data;
+using Blog.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +12,9 @@ builder.Services.AddControllers()
 builder.Services.AddDbContext<BlogDataContext>();
 
 var app = builder.Build();
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapControllers();
 
